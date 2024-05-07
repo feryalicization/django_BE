@@ -24,6 +24,11 @@ schema_view = get_schema_view(
 
 urlpatterns = [
 
+    path('barang', BarangListCreateAPIView.as_view(), name='barang_list'),
+    path('barang/<int:pk>', BarangDetailAPIView.as_view(), name='barang_detail'),
+    path('transaksi', TransaksiListCreateAPIView.as_view(), name='transaksi_list'),
+    path('transaksi/<int:pk>/', TransaksiDetailAPIView.as_view(), name='transaksi_detail'),
+
     path('api/token/', CustomObtainAuthToken.as_view(), name='api_token'),
     path('api/register/', UserRegistrationView.as_view(), name='user_register'),
 

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from .models import *
 
 
 
@@ -48,3 +49,20 @@ class CustomAuthTokenSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+    
+
+
+
+class BarangSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Barang
+        fields = ['id', 'nama_barang', 'stok', 'jumlah_terjual', 'jenis_barang']
+
+
+class TransaksiSerializer(serializers.ModelSerializer):
+
+    tanggal_transaksi = serializers.DateTimeField(source='created_at')
+
+    class Meta:
+        model = Transaksi
+        fields = ['id', 'tanggal_transaksi', 'barang', 'jenis_transaksi', 'jumlah']

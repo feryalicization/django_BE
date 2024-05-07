@@ -15,6 +15,7 @@ from rest_framework.views import APIView
 from django.conf import settings
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+from .filters import *
 
 
 
@@ -41,4 +42,36 @@ class CustomObtainAuthToken(ObtainAuthToken):
         return Response({
             'token': f'Token {token.key}'
         })
-    
+
+
+
+
+class BarangListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Barang.objects.all()
+    serializer_class = BarangSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BarangFilter
+    authentication_classes = [TokenAuthentication] 
+    permission_classes = [IsAuthenticated]  
+
+
+class BarangDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Barang.objects.all()
+    serializer_class = BarangSerializer
+    authentication_classes = [TokenAuthentication] 
+    permission_classes = [IsAuthenticated] 
+
+class TransaksiListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Transaksi.objects.all()
+    serializer_class = TransaksiSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TransaksiFilter
+    authentication_classes = [TokenAuthentication] 
+    permission_classes = [IsAuthenticated]  
+
+
+class TransaksiDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Transaksi.objects.all()
+    serializer_class = TransaksiSerializer
+    authentication_classes = [TokenAuthentication] 
+    permission_classes = [IsAuthenticated] 
