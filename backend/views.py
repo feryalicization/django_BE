@@ -70,6 +70,31 @@ class TransaksiListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]  
 
 
+    def perform_create(self, serializer):
+        jenis_transaksi = serializer.validated_data.get('jenis_transaksi')
+        barang = serializer.validated_data.get('barang')
+        jumlah = serializer.validated_data.get('jumlah')
+
+        if jenis_transaksi == 'beli':
+            barang.stok += jumlah
+            barang.save(update_fields=['stok'])
+            barang.jumlah_terjual += jumlah
+            barang.save(update_fields=['jumlah_terjual'])
+        elif jenis_transaksi == 'jual':
+            if barang.stok >= jumlah:
+                barang.stok -= jumlah
+                barang.save(update_fields=['stok'])
+                barang.jumlah_terjual += jumlah
+                barang.save(update_fields=['jumlah_terjual'])
+            else:
+                return Response({'error': 'Insufficient stock'}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
 class TransaksiDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Transaksi.objects.all()
     serializer_class = TransaksiSerializer

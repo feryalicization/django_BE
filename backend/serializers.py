@@ -61,7 +61,13 @@ class BarangSerializer(serializers.ModelSerializer):
 
 class TransaksiSerializer(serializers.ModelSerializer):
 
-    tanggal_transaksi = serializers.DateTimeField(source='created_at')
+    tanggal_transaksi = serializers.SerializerMethodField()
+
+    def get_tanggal_transaksi(self, obj):
+        created_at = obj.created_at 
+        formatted_tanggal_transaksi = created_at.strftime('%d-%m-%Y')
+
+        return formatted_tanggal_transaksi
 
     class Meta:
         model = Transaksi
