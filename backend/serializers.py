@@ -68,7 +68,9 @@ class TransaksiSerializer(serializers.ModelSerializer):
         formatted_tanggal_transaksi = created_at.strftime('%d-%m-%Y')
 
         return formatted_tanggal_transaksi
+    
+    nama_barang = serializers.CharField(source='barang.nama_barang', read_only=True)
 
     class Meta:
         model = Transaksi
-        fields = ['id', 'tanggal_transaksi', 'barang', 'jenis_transaksi', 'jumlah']
+        fields = ['id', 'barang', 'nama_barang', 'tanggal_transaksi', 'jenis_transaksi', 'jumlah']
