@@ -140,7 +140,7 @@ class Perbandingan(APIView):
             jenis_barang, transaksi = item  
             data.append({
                 'jenis_barang': jenis_barang,
-                'transaksi': transaksi
+                'transaksi': transaksi if transaksi != None else 0
             })
 
-        return Response(data)
+        return Response({"data": data})
