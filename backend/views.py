@@ -16,6 +16,10 @@ from django.conf import settings
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from .filters import *
+from .query import *
+from django.db import connections
+
+
 
 
 
@@ -100,3 +104,43 @@ class TransaksiDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TransaksiSerializer
     authentication_classes = [TokenAuthentication] 
     permission_classes = [IsAuthenticated] 
+
+
+
+
+class Perbandingan(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('start_date', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=False),
+            openapi.Parameter('end_date', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=False),
+        ],
+        responses={200: 'Success', 400: 'Bad Request', 404: 'Not Found'},
+    )
+
+    def get(self, request):
+        
+        serializer = PerbandinganQuerySerializer(data=request.query_params)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+
+        start_date = serializer.validated_data.get('start_date')
+        end_date = serializer.validated_data.get('end_date')
+
+        query = perbandingan(start_date, end_date)
+
+        with connections['default'].cursor() as cursor:
+            cursor.execute(query)
+            result = cursor.fetchall()
+
+        data = []
+
+        for item in result:
+            jenis_barang, transaksi = item  
+            data.append({
+                'jenis_barang': jenis_barang,
+                'transaksi': transaksi
+            })
+
+        return Response(data)

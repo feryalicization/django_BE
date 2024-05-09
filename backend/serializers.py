@@ -74,3 +74,9 @@ class TransaksiSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaksi
         fields = ['id', 'barang', 'nama_barang', 'tanggal_transaksi', 'jenis_transaksi', 'jumlah']
+
+
+
+class PerbandinganQuerySerializer(serializers.Serializer):
+    start_date = serializers.DateField(input_formats=['%Y-%m-%d'], required=False)
+    end_date = serializers.DateField(input_formats=['%Y-%m-%d'], required=False)

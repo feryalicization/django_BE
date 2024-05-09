@@ -28,6 +28,7 @@ urlpatterns = [
     path('barang/<int:pk>', BarangDetailAPIView.as_view(), name='barang_detail'),
     path('transaksi', TransaksiListCreateAPIView.as_view(), name='transaksi_list'),
     path('transaksi/<int:pk>/', TransaksiDetailAPIView.as_view(), name='transaksi_detail'),
+    path('perbandingan', Perbandingan.as_view(), name='perbandingan'),
 
     path('api/token/', CustomObtainAuthToken.as_view(), name='api_token'),
     path('api/register/', UserRegistrationView.as_view(), name='user_register'),
